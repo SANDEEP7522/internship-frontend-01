@@ -8,18 +8,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { TriangleAlert } from "lucide-react";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-export const SignupCard = () => {
-  const navigate = useNavigate();
 
-  const [signupForm, setSignupForm] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    username: "",
-  });
+export const SignupCard = ({ signupForm, setSignupForm, validationError, onSignupFormSubmit }) => {
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -37,15 +32,30 @@ export const SignupCard = () => {
       <CardHeader>
         <CardTitle>Sign up</CardTitle>
         <CardDescription>Sign up to access your account</CardDescription>
+
+        {validationError && (
+          <div
+            className="bg-destructive/15 p-4 rounded-md flex items-center gap-x-2 
+           text-sm mb-6 text-destructive-foreground"
+          >
+            <TriangleAlert size={20} className="text-red-700" />
+            <p className="text-red-500" >{validationError.message}</p>
+          </div>
+        )}
+
+       
+
       </CardHeader>
       <CardContent>
-        <form className="space-y-3">
+        <form className="space-y-3" onSubmit={onSignupFormSubmit} >
           <Input
             required
             placeholder="Email"
-            onChange={(e) =>
+            onChange={(e) =>{
+              console.log("Input value:", e.target.value);
               setSignupForm({ ...signupForm, email: e.target.value })
-            }
+            }}
+            
             value={signupForm.email}
             type="email"
             disabled={false}
