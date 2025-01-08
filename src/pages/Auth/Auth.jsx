@@ -1,6 +1,5 @@
-import { SignupCard } from "@/Organisms/Auth/SignupCard"
 
-export const Auth = () => {
+export const Auth = ({children}) => {
      return (
          <div
          className=" h-[100vh] flex items-center justify-center bg-slack "
@@ -8,7 +7,7 @@ export const Auth = () => {
           <div
           className="md:h-auto md:w-[420px]"
           >
-           <SignupCard />
+           {children}
           </div>
 
          </div>
