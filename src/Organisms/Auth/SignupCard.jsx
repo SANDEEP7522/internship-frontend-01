@@ -8,15 +8,24 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { TriangleAlert } from "lucide-react";
+import { LucideLoader2, TriangleAlert } from "lucide-react";
 import { useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaCheck, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-export const SignupCard = ({ signupForm, setSignupForm, validationError, onSignupFormSubmit }) => {
+export const SignupCard = ({
+  signupForm,
+  setSignupForm,
+  validationError,
+  onSignupFormSubmit,
+  error,
+  ispending,
+  isSuccess,
+}) => {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const togglePassword = () => {
@@ -39,26 +48,49 @@ export const SignupCard = ({ signupForm, setSignupForm, validationError, onSignu
            text-sm mb-6 text-destructive-foreground"
           >
             <TriangleAlert size={20} className="text-red-700" />
-            <p className="text-red-500" >{validationError.message}</p>
+            <p className="text-red-500">{validationError.message}</p>
           </div>
         )}
 
-       
+        {error && (
+          <div
+            className="bg-destructive/15 p-4 rounded-md flex items-center
+           gap-x-2 text-sm mb-6 text-destructive-foreground "
+          >
+            <TriangleAlert size={20} className="text-red-700" />
+            <p className="text-red-500">{error.message}</p>
+          </div>
+        )}
 
+        {isSuccess && (
+          <div
+            className="bg-destructive/15 p-4 rounded-md flex items-center 
+          gap-x-2 text-sm mb-6 text-destructive-foreground "
+          >
+            <p className="text-green-500  ">
+              <FaCheck size={20} className="text-green-700" />
+              Signup successfully done. redirected to login Page{" "}
+            </p>
+            
+            <LucideLoader2
+              size={20}
+              className="animate-spin ml-3 text-green-800 "
+            />
+
+          </div>
+        )}
       </CardHeader>
       <CardContent>
-        <form className="space-y-3" onSubmit={onSignupFormSubmit} >
+        <form className="space-y-3" onSubmit={onSignupFormSubmit}>
           <Input
-            required
             placeholder="Email"
-            onChange={(e) =>{
-              console.log("Input value:", e.target.value);
+            required
+            onChange={(e) =>
               setSignupForm({ ...signupForm, email: e.target.value })
-            }}
-            
+            }
             value={signupForm.email}
             type="email"
-            disabled={false}
+            disabled={ispending}
           />
 
           {/* Password Input with Show/Hide Button */}
@@ -71,7 +103,7 @@ export const SignupCard = ({ signupForm, setSignupForm, validationError, onSignu
               }
               value={signupForm.password}
               type={showPassword ? "text" : "password"}
-              disabled={false}
+              disabled={ispending}
             />
             <button
               type="button"
@@ -96,7 +128,7 @@ export const SignupCard = ({ signupForm, setSignupForm, validationError, onSignu
               }
               value={signupForm.confirmPassword}
               type={showConfirmPassword ? "text" : "password"}
-              disabled={false}
+              disabled={ispending}
             />
             <button
               type="button"
@@ -111,19 +143,23 @@ export const SignupCard = ({ signupForm, setSignupForm, validationError, onSignu
               )}
             </button>
           </div>
-
           <Input
+            placeholder="Your username"
             required
-            placeholder="Username"
             onChange={(e) =>
               setSignupForm({ ...signupForm, username: e.target.value })
             }
             value={signupForm.username}
             type="text"
-            disabled={false}
+            disabled={ispending}
           />
 
-          <Button disabled={false} size="lg" type="submit" className="w-full">
+          <Button
+            disabled={ispending}
+            size="lg"
+            type="submit"
+            className="w-full"
+          >
             Continue
           </Button>
         </form>
